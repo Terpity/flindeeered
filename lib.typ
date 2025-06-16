@@ -39,6 +39,7 @@
   submissionDate: none,
   // OmitIntro
   omitIntro: false,
+  cols: 2,
   // The paper's content.
   body,
 ) = {
@@ -112,7 +113,7 @@
   // Configure the page and multi-column properties.
   set columns(gutter: 12pt)
   set page(
-    columns: 2,
+    columns: cols,
     paper: paper-size,
     // The margins depend on the paper size.
     margin: if paper-size == "a4" {
@@ -327,3 +328,8 @@
   place(bottom, float: true, text(size: 8pt)[#block[#content]])
 }
 
+#let appendix(cols: 1, body) = {
+  show: page(columns: cols)[
+    #body
+  ]
+}
