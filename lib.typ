@@ -324,8 +324,16 @@
   bib
 }
 
-#let receipt(content) = {
-  place(bottom, float: true, text(size: 8pt)[#block[#content]])
+#let receipt(body) = {
+  footnote(
+    numbering: _ => [])[#body]
+  counter(footnote).update(n => n - 1)
+  context [#if (studentName != none) { [#studentName] } #if (studentName != none and submissionDate != none) {
+        [- Submitted]
+      }#if (submissionDate != none) {
+        submissionDate
+      }
+  ]
 }
 
 #let appendix(cols: 1, body) = {
