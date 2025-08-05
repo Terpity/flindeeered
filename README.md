@@ -35,27 +35,8 @@ A Typst template for academic papers formatted to match Flinders University stan
 
 ### Method 2: Local Package Installation
 
-Alternatively, the package can be added to your local Typst package store:
-
-1. **Find your local package directory:**
-   - Linux/macOS: `~/.local/share/typst/packages/local/`
-   - Windows: `%APPDATA%\typst\packages\local\`
-
-2. **Create the package structure:**
-   ```bash
-   mkdir -p ~/.local/share/typst/packages/local/flindeeered/0.1.0
-   ```
-
-3. **Copy the template files:**
-   ```bash
-   cp -r template/* ~/.local/share/typst/packages/local/flindeeered/0.1.0/
-   ```
-
-4. **Use in your documents:**
-   ```typst
-   #import "@local/flindeeered:0.1.0": *
-   ```
-
+Alternatively, the package can be added to your local Typst package store.
+As this is install/system specific, you'll need to find where your local packages are kept. e.g. With Tinymist on MacOS, packages are stored in /Users/{username}/Library/Caches/typst/packages/
 
 ## Usage
 
@@ -64,7 +45,7 @@ Alternatively, the package can be added to your local Typst package store:
 In your main Typst document (`main.typ`), import the template and configure it:
 
 ```typst
-#import "template/lib.typ": *
+#import "template/lib.typ": * // If using as a properly installed package, `#import "@local/flindeeered:0.1.0": *` may work as well
 
 #show: flindeeered.with(
   // Paper title
