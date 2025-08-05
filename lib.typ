@@ -2,7 +2,7 @@
 // A derivative of Typst's charged-ieee, formatted to match Flinders' standards
 // https://github.com/typst/templates/tree/main/charged-ieee
 //
-// Adapted by Harrison Wren, 2025
+// Adapted by Terpity, 2025
 
 #import "@preview/droplet:0.3.1": dropcap
 
@@ -35,10 +35,9 @@
   studentName: none,
   // The same student's fan
   studentFAN: none,
-  // Submission date
-  submissionDate: none,
   // OmitIntro
   omitIntro: false,
+  submissionDate: datetime.today().display("[day]/[month]/[year]"),
   cols: 2,
   // The paper's content.
   body,
@@ -60,6 +59,8 @@
   codly(languages: codly-languages)
 
   set image(width: 80%)
+
+  set footnote.entry(separator: [])
 
   set table(
     inset: (x: 8pt, y: 4pt),
@@ -277,6 +278,7 @@
   }
 
   [
+
     // Display the paper's contents.
     #if (not omitIntro) {
       [= Introduction]
@@ -291,6 +293,23 @@
     } else {
       body
     }
+  ]
+
+  [
+    #let receipt(studentName) = {
+      let info = if studentName != none {
+        (
+          studentName
+            + if submissionDate != none { " – Submitted " }
+            + if submissionDate != none { submissionDate } else { }
+        )
+      } else if studentName != none {
+        if submissionDate != none { submissionDate } else { }
+      }
+      footnote(numbering: _ => [])[#info]
+      counter(footnote).update(n => n - 1)
+    }
+    #receipt(studentName)
   ]
   // Display bibliography.
   bibliography
@@ -324,8 +343,7 @@
   bib
 }
 
-#let receipt(content) = {
-  place(bottom, float: true, text(size: 8pt)[#block[#content]])
+
 }
 
 #let appendix(cols: 1, body) = {
