@@ -35,14 +35,13 @@
   studentName: none,
   // The same student's fan
   studentFAN: none,
-  // Submission date
-  submissionDate: none,
   // OmitIntro
   omitIntro: false,
   cols: 2,
   // The paper's content.
   body,
 ) = {
+  
   // Set document metadata.
   set document(title: title, author: authors.map(author => author.name))
   set page(
@@ -60,6 +59,10 @@
   codly(languages: codly-languages)
 
   set image(width: 80%)
+
+  set footnote.entry(
+  separator: []
+  )
 
   set table(
     inset: (x: 8pt, y: 4pt),
@@ -277,6 +280,7 @@
   }
 
   [
+    
     // Display the paper's contents.
     #if (not omitIntro) {
       [= Introduction]
@@ -289,8 +293,21 @@
         #body
       ]
     } else {
+      
       body
     }
+  ]
+  [
+  #let receipt(studentName) = {
+  let info = if studentName != none {
+    studentName + " – Submitted " + datetime.today().display("[day]/[month]/[year]")
+  } else if studentName != none {
+    datetime.today().display("[day]/[month]/[year]")
+  }
+    footnote(numbering: _ => [])[#info]
+    counter(footnote).update(n => n - 1)
+  }
+  #receipt(studentName)
   ]
   // Display bibliography.
   bibliography
@@ -324,8 +341,7 @@
   bib
 }
 
-#let receipt(content) = {
-  place(bottom, float: true, text(size: 8pt)[#block[#content]])
+
 }
 
 #let appendix(cols: 1, body) = {
