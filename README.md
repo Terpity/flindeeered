@@ -134,6 +134,8 @@ authors: (
    bibliography: bibliography("references.bib", style: "ieee", full: true),
    ```
 
+Alternatively, if you'd prefer to do your bibliography manually, simply set `bibliography: none` and it will be omitted at the end of the document.
+
 ### Including Figures and Tables
 
 The template supports standard Typst figure syntax:
@@ -196,4 +198,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Credits
 
 - Original template: [charged-ieee](https://github.com/typst/templates/tree/main/charged-ieee) by Typst GmbH
-- Flinders University adaptation: Harrison Wren, 2025
+- Flinders University adaptation: Terpity, 2025
