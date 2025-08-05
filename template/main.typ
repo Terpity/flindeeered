@@ -27,7 +27,7 @@
 
   // The {Firstname McLastname (mcla0123)} parameters that need to appear in the header.
   // Both or either of them can be omitted and it will format appropriately
-  studentName: "Firstname McLastname",
+  studentName: "Harrison Wren",
   studentFAN: "mcla1234",
   // If for some reason the first {I. Introduction} heading needs to be omitted, set {ommitIntro: true}
   // Note that this will remove the dropcap. If this is still needed, use the droplet package and see the docs/template file for implementation
