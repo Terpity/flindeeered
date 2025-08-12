@@ -2,7 +2,7 @@
 // A derivative of Typst's charged-ieee, formatted to match Flinders' standards
 // https://github.com/typst/templates/tree/main/charged-ieee
 //
-// Adapted by Terpity, 2025
+// Adapted by Harrison Wren, 2025
 
 #import "@preview/droplet:0.3.1": dropcap
 
@@ -37,11 +37,11 @@
   studentFAN: none,
   // OmitIntro
   omitIntro: false,
-  submissionDate: datetime.today().display("[day]/[month]/[year]"),
   cols: 2,
   // The paper's content.
   body,
 ) = {
+  
   // Set document metadata.
   set document(title: title, author: authors.map(author => author.name))
   set page(
@@ -60,18 +60,23 @@
 
   set image(width: 80%)
 
-  set footnote.entry(separator: [])
+  set footnote.entry(
+  separator: []
+  )
 
   set table(
     inset: (x: 8pt, y: 4pt),
-    stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
-    fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
-  )
+    stroke: (x, y) => if y <= 1 { (top: 0.5pt) } 
+)
+
+  
+
+
 
   // Set the body font.
   // As of 2024-08, the IEEE LaTeX template uses wider interword spacing
   // - See e.g. the definition \def\@IEEEinterspaceratioM{0.35} in IEEEtran.cls
-  set text(region: "AU", font: "TeX Gyre Termes", size: 10pt, spacing: .35em)
+  set text(region: "AU", font: "Times New Roman", size: 10pt, spacing: .35em)
 
   // Enums numbering
   set enum(numbering: "1)a)i)")
@@ -181,20 +186,20 @@
     } else if it.level == 2 {
       // Second-level headings are run-ins.
       set text(style: "italic")
-      show: block.with(spacing: 10pt, sticky: true)
+      show: block.with(above: 20pt, below: 7pt, sticky: true)
       if it.numbering != none {
         numbering("A.", deepest)
-        h(7pt, weak: true)
+        h(1pt, weak: true)
       }
       it.body
-    } else [
+    } else if it.level == 3 { 
       // Third level headings are run-ins too, but different.
-      #if it.level == 3 {
-        numbering("a)", deepest)
-        [ ]
+      set text(style: "italic")
+      show: block.with(spacing: 5pt, sticky: true)
+      numbering("1)", deepest)
+      h(1pt, weak: true)
+      it.body
       }
-      _#(it.body):_
-    ]
   }
 
   // Style bibliography.
@@ -261,7 +266,7 @@
     },
   )
 
-  set par(justify: true, first-line-indent: 1em, spacing: 0.5em, leading: 0.5em)
+  set par(justify: true, first-line-indent:( amount: 1em, all: true), spacing: 0.5em, leading: 0.5em)
 
   // Display abstract and index terms.
   if abstract != none {
@@ -276,9 +281,20 @@
     }
     v(2pt)
   }
-
   [
-
+  #let receipt(studentName) = {
+  let info = if studentName != none {
+    studentName + " – Submitted " + datetime.today().display("[day]/[month]/[year]")
+  } else if studentName != none {
+    datetime.today().display("[day]/[month]/[year]")
+  }
+    footnote(numbering: _ => [])[#info]
+    counter(footnote).update(n => n - 1)
+  }
+  #receipt(studentName)
+  ]
+  [
+    
     // Display the paper's contents.
     #if (not omitIntro) {
       [= Introduction]
@@ -291,26 +307,11 @@
         #body
       ]
     } else {
+      
       body
     }
   ]
-
-  [
-    #let receipt(studentName) = {
-      let info = if studentName != none {
-        (
-          studentName
-            + if submissionDate != none { " – Submitted " }
-            + if submissionDate != none { submissionDate } else { }
-        )
-      } else if studentName != none {
-        if submissionDate != none { submissionDate } else { }
-      }
-      footnote(numbering: _ => [])[#info]
-      counter(footnote).update(n => n - 1)
-    }
-    #receipt(studentName)
-  ]
+  
   // Display bibliography.
   bibliography
 }
