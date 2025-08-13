@@ -270,7 +270,7 @@
 
     [_Abstract_---#h(weak: true, 0pt)#abstract]
 
-    if index-terms != () {
+    if index-terms != none {
       parbreak()
       [_Index Terms_---#h(weak: true, 0pt)#index-terms.join[, ]]
     }
@@ -301,10 +301,10 @@
         (
           studentName
             + if submissionDate != none { " – Submitted " }
-            + if submissionDate != none { submissionDate } else { }
+            + if submissionDate != none { submissionDate } else {}
         )
       } else if studentName != none {
-        if submissionDate != none { submissionDate } else { }
+        if submissionDate != none { submissionDate } else {}
       }
       footnote(numbering: _ => [])[#info]
       counter(footnote).update(n => n - 1)
