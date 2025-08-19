@@ -2,7 +2,7 @@
 // A derivative of Typst's charged-ieee, formatted to match Flinders' standards
 // https://github.com/typst/templates/tree/main/charged-ieee
 //
-// Adapted by Harrison Wren, 2025
+// Adapted by Terpity, 2025
 
 #import "@preview/droplet:0.3.1": dropcap
 
@@ -352,3 +352,4 @@
     #body
   ]
 }
+
