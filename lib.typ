@@ -50,8 +50,8 @@
       }#if (studentFAN != none) {
         studentFAN
       }#if (studentName != none and studentFAN != none) { [)] } #h(1fr) #counter(page).display(
-        "1 of 1",
-        both: true,
+        "1",
+        both: false,
       )],
   )
 
@@ -64,9 +64,11 @@
 
   set table(
     inset: (x: 8pt, y: 4pt),
-    stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
-    fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
+    stroke: (x, y) => if y == 1 { (top: 0.5pt) },
+    // fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
+    align: horizon,
   )
+
 
   // Set the body font.
   // As of 2024-08, the IEEE LaTeX template uses wider interword spacing
@@ -278,6 +280,23 @@
   }
 
   [
+    #let receipt(studentName) = {
+      let info = if studentName != none {
+        (
+          studentName
+            + if submissionDate != none { " – Submitted " }
+            + if submissionDate != none { submissionDate } else {}
+        )
+      } else if studentName != none {
+        if submissionDate != none { submissionDate } else {}
+      }
+      footnote(numbering: _ => [])[#info]
+      counter(footnote).update(n => n - 1)
+    }
+    #receipt(studentName)
+  ]
+
+  [
 
     // Display the paper's contents.
     #if (not omitIntro) {
@@ -295,22 +314,7 @@
     }
   ]
 
-  [
-    #let receipt(studentName) = {
-      let info = if studentName != none {
-        (
-          studentName
-            + if submissionDate != none { " – Submitted " }
-            + if submissionDate != none { submissionDate } else { }
-        )
-      } else if studentName != none {
-        if submissionDate != none { submissionDate } else { }
-      }
-      footnote(numbering: _ => [])[#info]
-      counter(footnote).update(n => n - 1)
-    }
-    #receipt(studentName)
-  ]
+
   // Display bibliography.
   bibliography
 }
