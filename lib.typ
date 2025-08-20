@@ -272,7 +272,7 @@
 
     [_Abstract_---#h(weak: true, 0pt)#abstract]
 
-    if index-terms != () {
+    if index-terms != none {
       parbreak()
       [_Index Terms_---#h(weak: true, 0pt)#index-terms.join[, ]]
     }
@@ -313,7 +313,6 @@
       body
     }
   ]
-
 
   // Display bibliography.
   bibliography
