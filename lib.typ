@@ -274,7 +274,10 @@
 
     if index-terms != none {
       parbreak()
-      [_Index Terms_---#h(weak: true, 0pt)#index-terms.join[, ]]
+      {
+        let sortedIndex = index-terms.sorted()
+        [_Index Terms_---#h(weak: true, 0pt)#sortedIndex.join[, ]]
+      }
     }
     v(2pt)
   }
@@ -354,3 +357,4 @@
     #body
   ]
 }
+
