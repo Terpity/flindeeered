@@ -22,6 +22,7 @@
   abstract: none,
   // A list of index terms to display after the abstract.
   index-terms: (),
+  sortIndex: true,
   // The article's paper size. Also affects the margins.
   paper-size: "a4",
   // The result of a call to the `bibliography` function or `none`.
@@ -62,12 +63,42 @@
 
   set footnote.entry(separator: [])
 
+
   set table(
     inset: (x: 8pt, y: 4pt),
     stroke: (x, y) => if y == 1 { (top: 0.5pt) },
     // fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
     align: horizon,
   )
+
+  show table: t => {
+    let width = t.columns.len()
+    let height = t.children.len() / width
+    let sep = 2pt
+    let stroke = .6pt
+    let topStroke = tiling(
+      size: (10pt, (std.stroke(stroke).thickness) * 10),
+      {
+        let t = std.stroke(stroke).thickness / 2 + 0.1pt
+        let theline = line(length: 10pt, stroke: stroke)
+        place(dy: t, theline)
+        place(dy: t + sep, theline)
+      },
+    )
+
+    let bottomStroke = tiling(
+      size: (1pt, 0.6pt + 2pt + 0.6pt + 0.1pt),
+      {
+        let t = std.stroke(stroke).thickness / 2 + 0.1pt
+        let theline = line(length: 10pt, stroke: stroke)
+        place(dy: t + 2pt, theline)
+        place(dy: t + 4pt, theline)
+      },
+    )
+
+
+    box(t, stroke: (bottom: (thickness: 6pt, paint: bottomStroke), top: (thickness: 6pt, paint: topStroke)))
+  }
 
 
   // Set the body font.
@@ -275,7 +306,7 @@
     if index-terms != none {
       parbreak()
       {
-        let sortedIndex = index-terms.sorted()
+        let sortedIndex = if (sortIndex == false) { index-terms } else if (sortIndex == true) { index-terms.sorted() }
         [_Index Terms_---#h(weak: true, 0pt)#sortedIndex.join[, ]]
       }
     }
@@ -349,8 +380,6 @@
   bib
 }
 
-
-}
 
 #let appendix(cols: 1, body) = {
   show: page(columns: cols)[

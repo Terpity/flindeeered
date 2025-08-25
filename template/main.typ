@@ -1,5 +1,5 @@
 
-#import "@local/flindeeered:0.1.0": *
+#import "@local/flindeeered:0.1.2": *
 
 #show: flindeeered.with(
   // Paper title
@@ -21,6 +21,7 @@
 
   // A list of strings for each index term
   index-terms: ("Foo", "Bar"),
+  sortIndex: true,
 
   // Pass in a Typst bibliography function here, a default has been provided with some suggested settings
   bibliography: bibliography("references.bib", style: "ieee", full: true),
