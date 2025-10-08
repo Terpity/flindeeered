@@ -2,12 +2,12 @@
 // A derivative of Typst's charged-ieee, formatted to match Flinders' standards
 // https://github.com/typst/templates/tree/main/charged-ieee
 //
-// Adapted by Harrison Wren, 2025
+// Adapted by Terpity, 2025
 
 #import "@preview/droplet:0.3.1": dropcap
 
-#import "@preview/codly:1.2.0": *
-#import "@preview/codly-languages:0.1.1": *
+#import "@preview/codly:1.3.0": *
+#import "@preview/codly-languages:0.1.8": *
 
 // This function gets your whole document as its `body` and formats
 // it as an article in the style of the IEEE.
@@ -22,6 +22,8 @@
   abstract: none,
   // A list of index terms to display after the abstract.
   index-terms: (),
+  // Boolean configuring whether the index terms will be automatically sorted alphabetically. True by default
+  sortIndex: true,
   // The article's paper size. Also affects the margins.
   paper-size: "a4",
   // The result of a call to the `bibliography` function or `none`.
@@ -36,7 +38,7 @@
   // The same student's fan
   studentFAN: none,
   // Submission date
-  submissionDate: none,
+  submissionDate: datetime.today().display("[Year]-[Month]-[Day]"),
   // OmitIntro
   omitIntro: false,
   // The paper's content.
@@ -69,7 +71,7 @@
   // Set the body font.
   // As of 2024-08, the IEEE LaTeX template uses wider interword spacing
   // - See e.g. the definition \def\@IEEEinterspaceratioM{0.35} in IEEEtran.cls
-  set text(region: "AU", font: "TeX Gyre Termes", size: 10pt, spacing: .35em)
+  set text(region: "AU", font: "Times New Roman", size: 10pt, spacing: .35em)
 
   // Enums numbering
   set enum(numbering: "1)a)i)")
@@ -103,7 +105,7 @@
 
   // Code blocks
   show raw: set text(
-    font: "TeX Gyre Cursor",
+    font: "Times New Roman",
     ligatures: false,
     size: 1em / 0.8,
     spacing: 100%,
@@ -185,14 +187,13 @@
         h(7pt, weak: true)
       }
       it.body
-    } else [
-      // Third level headings are run-ins too, but different.
-      #if it.level == 3 {
-        numbering("a)", deepest)
-        [ ]
-      }
-      _#(it.body):_
-    ]
+    } else if it.level == 3 {
+      set text(style: "italic")
+      show: block.with(spacing: 5pt, sticky: true)
+      numbering("1)", deepest)
+      h(1pt, weak: true)
+      it.body
+    }
   }
 
   // Style bibliography.
@@ -259,8 +260,7 @@
     },
   )
 
-  set par(justify: true, first-line-indent: 1em, spacing: 0.5em, leading: 0.5em)
-
+  set par(justify: true, first-line-indent: (amount: 1em, all: true), spacing: 0.5em, leading: 0.5em)
   // Display abstract and index terms.
   if abstract != none {
     set par(spacing: 0.45em, leading: 0.45em)
@@ -268,13 +268,29 @@
 
     [_Abstract_---#h(weak: true, 0pt)#abstract]
 
-    if index-terms != () {
+    if index-terms != none and index-terms != () {
       parbreak()
-      [_Index Terms_---#h(weak: true, 0pt)#index-terms.join[, ]]
+      let sortedIndex = if (sortIndex == false) { index-terms } else if (sortIndex == true) { index-terms.sorted() }
+      [_Index Terms_---#h(weak: true, 0pt)#sortedIndex.join[, ]]
     }
     v(2pt)
   }
-
+  [
+    #let receipt(studentName) = {
+      let info = if studentName != none {
+        (
+          studentName
+            + if submissionDate != none { " – Submitted " }
+            + if submissionDate != none { submissionDate } else {}
+        )
+      } else if studentName != none {
+        if submissionDate != none { submissionDate } else {}
+      }
+      footnote(numbering: _ => [])[#info]
+      counter(footnote).update(n => n - 1)
+    }
+    #receipt(studentName)
+  ]
   [
     // Display the paper's contents.
     #if (not omitIntro) {
@@ -327,3 +343,37 @@
   place(bottom, float: true, text(size: 8pt)[#block[#content]])
 }
 
+#let figureList(showCode: true, showEquations: false) = [
+  #context [
+    #let numImages = counter(figure.where(kind: image)).final()
+    #let numTables = counter(figure.where(kind: table)).final()
+    #let numRaw = counter(figure.where(kind: raw)).final()
+    #let numEq = counter(figure.where(kind: "equation")).final()
+    #if (numImages.at(0) > 0) {
+      [
+        == List of Figures
+        #outline(title: none, target: figure.where(kind: image))
+      ]
+    }
+
+    #if (numTables.at(0) > 0) {
+      [
+        == List of Tables
+        #outline(title: none, target: figure.where(kind: table))
+      ]
+    }
+
+
+    #if ((numRaw.at(0) > 0) and showCode) {
+      [
+        == List of Code Blocks
+        #outline(title: none, target: figure.where(kind: raw))
+      ]
+    }
+    #if ((numRaw.at(0) > 0) and showEquations) {
+      [
+        == List of Equations
+        #outline(title: none, target: figure.where(kind: "equation"))
+      ]
+    }
+  ]]
