@@ -61,7 +61,7 @@
   show: codly-init.with()
   codly(languages: codly-languages)
 
-  set image(width: 80%)
+  // set image(width: 80%)
 
   set footnote.entry(separator: [])
 
