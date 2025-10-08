@@ -37,10 +37,9 @@
   studentName: none,
   // The same student's fan
   studentFAN: none,
-  // Submission date
-  submissionDate: none,
   // OmitIntro
   omitIntro: false,
+  // Submission date. Defaults to today, set to none to remove or provide custom content to override
   submissionDate: datetime.today().display("[day]/[month]/[year]"),
   cols: 2,
   // The paper's content.
