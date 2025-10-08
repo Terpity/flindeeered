@@ -68,6 +68,38 @@
     fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
   )
 
+  show table: t => {
+    let width = t.columns.len()
+    let height = t.children.len() / width
+    let sep = 2pt
+    let stroke = .6pt
+    let topStroke = tiling(
+      size: (10pt, (std.stroke(stroke).thickness) * 10),
+      {
+        let t = std.stroke(stroke).thickness / 2 + 0.1pt
+        let theline = line(length: 10pt, stroke: stroke)
+        place(dy: t, theline)
+        place(dy: t + sep, theline)
+      },
+    )
+
+    let bottomStroke = tiling(
+      size: (1pt, 0.6pt + 2pt + 0.6pt + 0.1pt),
+      {
+        let t = std.stroke(stroke).thickness / 2 + 0.1pt
+        let theline = line(length: 10pt, stroke: stroke)
+        place(dy: t + 2pt, theline)
+        place(dy: t + 4pt, theline)
+      },
+    )
+
+
+    box(
+      t,
+      stroke: (bottom: (thickness: 6pt, paint: bottomStroke), top: (thickness: 6pt, paint: topStroke)),
+      inset: (bottom: 2pt),
+    )
+  }
   // Set the body font.
   // As of 2024-08, the IEEE LaTeX template uses wider interword spacing
   // - See e.g. the definition \def\@IEEEinterspaceratioM{0.35} in IEEEtran.cls
