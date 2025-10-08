@@ -1,5 +1,5 @@
 
-#import "@local/flindeeered:0.1.0": *
+#import "@local/flindeeered:0.1.2": *
 
 #show: flindeeered.with(
   // Paper title
@@ -21,6 +21,7 @@
 
   // A list of strings for each index term
   index-terms: ("Foo", "Bar"),
+  sortIndex: true,
 
   // Pass in a Typst bibliography function here, a default has been provided with some suggested settings
   bibliography: bibliography("references.bib", style: "ieee", full: true),
@@ -28,9 +29,7 @@
   // The {Firstname McLastname (mcla0123)} parameters that need to appear in the header.
   // Both or either of them can be omitted and it will format appropriately
   studentName: "Firstname McLastname",
-  studentFAN: "mcla0123",
-  submissionDate: "01 Month Year",
-
+  studentFAN: "mcla1234",
   // If for some reason the first {I. Introduction} heading needs to be omitted, set {ommitIntro: true}
   // Note that this will remove the dropcap. If this is still needed, use the droplet package and see the docs/template file for implementation
   omitIntro: false,
@@ -62,8 +61,9 @@ $ sum I_"in" = sum I_"out" $ <intro.kcl>
 #lorem(20) The sentence was then ended by referring to @tab:planets.
 
 // Place this where convinient and position at the bottom left-hand corner of the first page
-#receipt([Firstname Lastname, Year])
+
 
 
 
 // End demo code -----------------------------------------------------------------
+
