@@ -38,9 +38,11 @@
   // The same student's fan
   studentFAN: none,
   // Submission date
-  submissionDate: datetime.today().display("[Year]-[Month]-[Day]"),
+  submissionDate: none,
   // OmitIntro
   omitIntro: false,
+  submissionDate: datetime.today().display("[day]/[month]/[year]"),
+  cols: 2,
   // The paper's content.
   body,
 ) = {
@@ -52,8 +54,8 @@
       }#if (studentFAN != none) {
         studentFAN
       }#if (studentName != none and studentFAN != none) { [)] } #h(1fr) #counter(page).display(
-        "1 of 1",
-        both: true,
+        "1",
+        both: false,
       )],
   )
 
@@ -62,11 +64,45 @@
 
   set image(width: 80%)
 
+  set footnote.entry(separator: [])
+
+
   set table(
     inset: (x: 8pt, y: 4pt),
-    stroke: (x, y) => if y <= 1 { (top: 0.5pt) },
-    fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
+    stroke: (x, y) => if y == 1 { (top: 0.5pt) },
+    // fill: (x, y) => if y > 0 and calc.rem(y, 2) == 0 { rgb("#efefef") },
+    align: horizon,
   )
+
+  show table: t => {
+    let width = t.columns.len()
+    let height = t.children.len() / width
+    let sep = 2pt
+    let stroke = .6pt
+    let topStroke = tiling(
+      size: (10pt, (std.stroke(stroke).thickness) * 10),
+      {
+        let t = std.stroke(stroke).thickness / 2 + 0.1pt
+        let theline = line(length: 10pt, stroke: stroke)
+        place(dy: t, theline)
+        place(dy: t + sep, theline)
+      },
+    )
+
+    let bottomStroke = tiling(
+      size: (1pt, 0.6pt + 2pt + 0.6pt + 0.1pt),
+      {
+        let t = std.stroke(stroke).thickness / 2 + 0.1pt
+        let theline = line(length: 10pt, stroke: stroke)
+        place(dy: t + 2pt, theline)
+        place(dy: t + 4pt, theline)
+      },
+    )
+
+
+    box(t, stroke: (bottom: (thickness: 6pt, paint: bottomStroke), top: (thickness: 6pt, paint: topStroke)))
+  }
+
 
   // Set the body font.
   // As of 2024-08, the IEEE LaTeX template uses wider interword spacing
@@ -114,7 +150,7 @@
   // Configure the page and multi-column properties.
   set columns(gutter: 12pt)
   set page(
-    columns: 2,
+    columns: cols,
     paper: paper-size,
     // The margins depend on the paper size.
     margin: if paper-size == "a4" {
@@ -292,6 +328,24 @@
     #receipt(studentName)
   ]
   [
+    #let receipt(studentName) = {
+      let info = if studentName != none {
+        (
+          studentName
+            + if submissionDate != none { " – Submitted " }
+            + if submissionDate != none { submissionDate } else {}
+        )
+      } else if studentName != none {
+        if submissionDate != none { submissionDate } else {}
+      }
+      footnote(numbering: _ => [])[#info]
+      counter(footnote).update(n => n - 1)
+    }
+    #receipt(studentName)
+  ]
+
+  [
+
     // Display the paper's contents.
     #if (not omitIntro) {
       [= Introduction]
@@ -307,6 +361,7 @@
       body
     }
   ]
+
   // Display bibliography.
   bibliography
 }
@@ -339,8 +394,11 @@
   bib
 }
 
-#let receipt(content) = {
-  place(bottom, float: true, text(size: 8pt)[#block[#content]])
+
+#let appendix(cols: 1, body) = {
+  show: page(columns: cols)[
+    #body
+  ]
 }
 
 #let figureList(showCode: true, showEquations: false) = [
