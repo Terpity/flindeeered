@@ -76,7 +76,7 @@
   show table: t => {
     let width = t.columns.len()
     let height = t.children.len() / width
-    let sep = 2pt
+    let sep = .3em
     let stroke = .6pt
     let topStroke = tiling(
       size: (10pt, (std.stroke(stroke).thickness) * 10),
@@ -93,8 +93,8 @@
       {
         let t = std.stroke(stroke).thickness / 2 + 0.1pt
         let theline = line(length: 10pt, stroke: stroke)
-        place(dy: t + 2pt, theline)
-        place(dy: t + 4pt, theline)
+        place(dy: t, theline)
+        // place(dy: t + 2pt, theline)
       },
     )
 
@@ -102,7 +102,8 @@
     box(
       t,
       stroke: (bottom: (thickness: 6pt, paint: bottomStroke), top: (thickness: 6pt, paint: topStroke)),
-      inset: (bottom: 2pt),
+      inset: (bottom: .5em),
+      // outset: (top: .5em),
     )
   }
   // Set the body font.
