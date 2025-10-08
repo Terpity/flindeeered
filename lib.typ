@@ -329,22 +329,7 @@
     }
     #receipt(studentName)
   ]
-  [
-    #let receipt(studentName) = {
-      let info = if studentName != none {
-        (
-          studentName
-            + if submissionDate != none { " – Submitted " }
-            + if submissionDate != none { submissionDate } else {}
-        )
-      } else if studentName != none {
-        if submissionDate != none { submissionDate } else {}
-      }
-      footnote(numbering: _ => [])[#info]
-      counter(footnote).update(n => n - 1)
-    }
-    #receipt(studentName)
-  ]
+
 
   [
 
