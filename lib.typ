@@ -99,10 +99,12 @@
     )
 
 
-    box(t, stroke: (bottom: (thickness: 6pt, paint: bottomStroke), top: (thickness: 6pt, paint: topStroke)))
+    box(
+      t,
+      stroke: (bottom: (thickness: 6pt, paint: bottomStroke), top: (thickness: 6pt, paint: topStroke)),
+      inset: (bottom: 2pt),
+    )
   }
-
-
   // Set the body font.
   // As of 2024-08, the IEEE LaTeX template uses wider interword spacing
   // - See e.g. the definition \def\@IEEEinterspaceratioM{0.35} in IEEEtran.cls
