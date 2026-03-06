@@ -1,9 +1,9 @@
 
-#import "@local/flindeeered:0.1.2": *
+#import "../lib.typ": *
 
 #show: flindeeered.with(
   // Paper title
-  title: "Title",
+  title: "Typst Template for ENGR3712 Signal Processing",
 
   // An object for each author. See the commented lines for possible fields, but typically Flinders requires only {name: F Lastname} and {topic: ENGR0000 Topic Name}
   authors: (
@@ -15,13 +15,13 @@
       topic: "ENGR0000 Topic Name",
     ),
   ),
+  labPartners: ("Lab P. Artner","John McPartnerface"),
 
   // Write the abstract in this content box. Delete the lorem if you want too.
   abstract: [#lorem(20)],
 
   // A list of strings for each index term
   index-terms: ("Foo", "Bar"),
-  sortIndex: true,
 
   // Pass in a Typst bibliography function here, a default has been provided with some suggested settings
   bibliography: bibliography("references.bib", style: "ieee", full: true),

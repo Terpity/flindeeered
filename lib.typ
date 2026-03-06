@@ -36,6 +36,8 @@
   studentName: none,
   // The same student's fan
   studentFAN: none,
+  // Partners
+  labPartners: (),
   // OmitIntro
   omitIntro: false,
   submissionDate: datetime.today().display("[day]/[month]/[year]"),
@@ -252,45 +254,21 @@
       }
 
       // Display the authors list.
-      set par(leading: 0.6em)
-      for i in range(calc.ceil(authors.len() / 3)) {
-        let end = calc.min((i + 1) * 3, authors.len())
-        let is-last = authors.len() == end
-        let slice = authors.slice(i * 3, end)
-        grid(
-          columns: slice.len() * (1fr,),
-          gutter: 12pt,
-          ..slice.map(author => align(
-            center,
-            {
-              text(size: 11pt, author.name)
-              if "department" in author [
-                \ #emph(author.department)
-              ]
-              if "organisation" in author [
-                \ #emph(author.organisation)
-              ]
-              if "location" in author [
-                \ #author.location
-              ]
-              if "email" in author {
-                if type(author.email) == str [
-                  \ #link("mailto:" + author.email)
-                ] else [
-                  \ #author.email
-                ]
-              }
-              if "topic" in author [
-                \ #emph(author.topic)
-              ]
-            },
-          ))
-        )
+      grid(
+        columns: 1fr,
+        align: center, 
+        align(center, text(size: 11pt, "Author: " + authors.at(0).name)),
+        v(4pt),
+        [
+          #set par(leading: 0.6em)
 
-        if not is-last {
-          v(16pt, weak: true)
-        }
-      }
+          #if labPartners.len() == 1 {
+            align(center, text(size: 11pt, "Lab Partner: " + labPartners.at(0)))
+          } else if labPartners.len() > 1 {
+            align(center, text(size: 11pt, "Lab Partners: " + labPartners.join(", ")))
+          }
+        ],
+      ) 
     },
   )
 
@@ -307,7 +285,7 @@
       parbreak()
       {
         let sortedIndex = if (sortIndex == false) { index-terms } else if (sortIndex == true) { index-terms.sorted() }
-        [_Index Terms_---#h(weak: true, 0pt)#sortedIndex.join[, ]]
+        [_Keywords_---#h(weak: true, 0pt)#sortedIndex.join[, ]]
       }
     }
     v(2pt)
@@ -318,7 +296,7 @@
       let info = if studentName != none {
         (
           studentName
-            + if submissionDate != none { " – Submitted " }
+            + if submissionDate != none { " - Submitted " }
             + if submissionDate != none { submissionDate } else {}
         )
       } else if studentName != none {
