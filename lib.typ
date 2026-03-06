@@ -305,7 +305,7 @@
       footnote(numbering: _ => [])[#info]
       counter(footnote).update(n => n - 1)
     }
-    #receipt(studentName)
+    // #receipt(studentName)
   ]
 
   [
